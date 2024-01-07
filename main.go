@@ -21,7 +21,7 @@ func main() {
 	movieClient = moviedb.Init(cfg.Token)
 
 	fmt.Println("adding movie to list")
-	// add "The Nightmare Before Christmas" to the list
+	// add povided movie to the provided list
 	if err := movieClient.AddMovieToList(movieId, listId); err != nil {
 		panic(fmt.Sprintf("could not add to list: %v", err))
 	}
