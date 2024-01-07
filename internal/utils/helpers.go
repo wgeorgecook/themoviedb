@@ -1,4 +1,4 @@
-package main
+package utils
 
 import (
 	"fmt"
@@ -9,12 +9,12 @@ import (
 )
 
 type initConfig struct {
-	token   string
-	movieID string
-	listId  string
+	Token   string
+	MovieID string
+	ListId  string
 }
 
-func loadEnv() initConfig {
+func LoadEnv() initConfig {
 	// Load environment variables from the .env file
 	err := godotenv.Load()
 	if err != nil {
@@ -26,13 +26,13 @@ func loadEnv() initConfig {
 	listIDStr := os.Getenv("LIST_ID")
 
 	return initConfig{
-		token:   bearerToken,
-		movieID: movieIdStr,
-		listId:  listIDStr,
+		Token:   bearerToken,
+		MovieID: movieIdStr,
+		ListId:  listIDStr,
 	}
 }
 
-func validateInitParams(bearerToken, movieIdStr, listIDStr string) (int, int) {
+func ValidateInitParams(bearerToken, movieIdStr, listIDStr string) (int, int) {
 	if movieIdStr == "" {
 		panic("must provide MOVIE_ID")
 	}

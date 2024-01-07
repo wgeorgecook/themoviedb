@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	moviedb "moviedb/internal/moviedb"
+	utils "moviedb/internal/utils"
 )
 
 var movieClient *moviedb.Api
@@ -12,12 +13,12 @@ func main() {
 	fmt.Println("Hello!")
 	defer fmt.Println("Goodbye!")
 
-	cfg := loadEnv()
-	movieId, listId := validateInitParams(cfg.token, cfg.movieID, cfg.listId)
+	cfg := utils.LoadEnv()
+	movieId, listId := utils.ValidateInitParams(cfg.Token, cfg.MovieID, cfg.ListId)
 
 	fmt.Println("initializing client")
 	// init the client
-	movieClient = moviedb.Init(cfg.token)
+	movieClient = moviedb.Init(cfg.Token)
 
 	fmt.Println("adding movie to list")
 	// add "The Nightmare Before Christmas" to the list
