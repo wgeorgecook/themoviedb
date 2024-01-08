@@ -2,30 +2,41 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"strings"
 
-	moviedb "moviedb/internal/moviedb"
 	utils "moviedb/internal/utils"
 )
 
-var movieClient *moviedb.Api
+const (
+	modifyList  = "modifyList"
+	createMovie = "createMovie"
+)
+
+var testsToRun []func()
 
 func main() {
 	fmt.Println("Hello!")
 	defer fmt.Println("Goodbye!")
 
-	cfg := utils.LoadEnv()
-	movieId, listId := utils.ValidateInitParams(cfg.Token, cfg.MovieID, cfg.ListId)
-
-	fmt.Println("initializing client")
-	// init the client
-	movieClient = moviedb.Init(cfg.Token)
-
-	fmt.Println("adding movie to list")
-	// add povided movie to the provided list
-	if err := movieClient.AddMovieToList(movieId, listId); err != nil {
-		panic(fmt.Sprintf("could not add to list: %v", err))
+	tests := os.Getenv("TESTS")
+	fmt.Println("gathering tests...")
+	for _, test := range strings.Split(tests, ",") {
+		switch test {
+		case modifyList:
+			testsToRun = append(testsToRun, utils.TestModifyList)
+		case createMovie:
+			testsToRun = append(testsToRun, utils.TestCreateMovie)
+		}
+		fmt.Println("complete")
 	}
 
-	// exit!
-	fmt.Println("added movie to list")
+	if testsToRun != nil {
+		fmt.Println("running tests")
+		for _, test := range testsToRun {
+			test()
+		}
+		fmt.Println("complete")
+	}
+
 }

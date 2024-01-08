@@ -9,12 +9,14 @@ import (
 )
 
 type initConfig struct {
-	Token   string
-	MovieID string
-	ListId  string
+	Token       string
+	MovieID     string
+	ListId      string
+	MovieName   string
+	PostgresURI string
 }
 
-func LoadEnv() initConfig {
+func loadEnv() initConfig {
 	// Load environment variables from the .env file
 	err := godotenv.Load()
 	if err != nil {
@@ -24,15 +26,19 @@ func LoadEnv() initConfig {
 	bearerToken := os.Getenv("BEARER_TOKEN")
 	movieIdStr := os.Getenv("MOVIE_ID")
 	listIDStr := os.Getenv("LIST_ID")
+	movieName := os.Getenv("MOVIE_NAME")
+	postgresUri := os.Getenv("POSTGRES_URI")
 
 	return initConfig{
-		Token:   bearerToken,
-		MovieID: movieIdStr,
-		ListId:  listIDStr,
+		Token:       bearerToken,
+		MovieID:     movieIdStr,
+		ListId:      listIDStr,
+		MovieName:   movieName,
+		PostgresURI: postgresUri,
 	}
 }
 
-func ValidateInitParams(bearerToken, movieIdStr, listIDStr string) (int, int) {
+func validateModifyListParams(bearerToken, movieIdStr, listIDStr string) (int, int) {
 	if movieIdStr == "" {
 		panic("must provide MOVIE_ID")
 	}
@@ -56,4 +62,21 @@ func ValidateInitParams(bearerToken, movieIdStr, listIDStr string) (int, int) {
 	}
 
 	return movieId, listId
+}
+
+func validateCreateMovieParams(movieIdStr, movieName string) (int, string) {
+	if movieIdStr == "" {
+		panic("must provide MOVIE_ID")
+	}
+
+	if movieName == "" {
+		panic("must provide MOVIE_NAME")
+	}
+
+	movieId, err := strconv.Atoi(movieIdStr)
+	if err != nil {
+		panic("MOVIE_ID must be type int")
+	}
+
+	return movieId, movieName
 }
