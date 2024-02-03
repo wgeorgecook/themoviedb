@@ -16,7 +16,8 @@ func initRouter() {
 
 }
 
-func StartServer() {
+func StartServer(movieDbToken string) {
 	initRouter()
+	initMovieDbClient(movieDbToken)
 	router.Run()
 }
