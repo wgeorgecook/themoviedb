@@ -23,11 +23,12 @@ func TestModifyList(cfg InitConfig) {
 func TestCreateMovie(cfg InitConfig) {
 	movieId, movieName := validateCreateMovieParams(cfg.MovieID, cfg.MovieName)
 	fmt.Println("inserting movie")
-	if err := db.CreateMovie(context.TODO(), &db.Movie{ID: int64(movieId), Name: movieName}); err != nil {
+	if err := db.UpsertMovie(context.TODO(), &db.Movie{ID: int64(movieId), Name: movieName}); err != nil {
 		panic(fmt.Sprintf("could not insert movie: %v", err))
 	}
 	fmt.Println("insert successful, checking created movie")
-	m, err := db.GetMovie(context.TODO(), int64(movieId))
+	movie := db.Movie{ID: int64(movieId)}
+	m, err := db.GetMovie(context.TODO(), movie)
 	if err != nil {
 		panic(fmt.Sprintf("could not get movie: %v", err))
 	}
