@@ -48,7 +48,7 @@ func testRunner(cfg utils.InitConfig) {
 
 func main() {
 	cfg := utils.LoadEnv()
-	db.Init(cfg.PostgresURI)
+	db.Init(cfg.PostgresURI, cfg.Debug)
 
 	if cfg.RunTests {
 		testRunner(cfg)

@@ -15,6 +15,7 @@ type InitConfig struct {
 	MovieName   string
 	PostgresURI string
 	RunTests    bool
+	Debug       bool
 }
 
 func LoadEnv() InitConfig {
@@ -30,9 +31,13 @@ func LoadEnv() InitConfig {
 	movieName := os.Getenv("MOVIE_NAME")
 	postgresUri := os.Getenv("POSTGRES_URI")
 	runTests := os.Getenv("RUN_TESTS")
+	debug := os.Getenv("DEBUG")
 
 	rt := false
 	rt, _ = strconv.ParseBool(runTests)
+
+	db := false
+	db, _ = strconv.ParseBool(debug)
 
 	return InitConfig{
 		Token:       bearerToken,
@@ -41,6 +46,7 @@ func LoadEnv() InitConfig {
 		MovieName:   movieName,
 		PostgresURI: postgresUri,
 		RunTests:    rt,
+		Debug:       db,
 	}
 }
 
