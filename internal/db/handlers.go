@@ -5,6 +5,14 @@ import (
 	"time"
 )
 
+func GetMovies(ctx context.Context) ([]Movie, error) {
+	var m []Movie
+	if err := client.NewSelect().Model(&m).Scan(ctx); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 func GetMovie(ctx context.Context, id int64) (*Movie, error) {
 	var m Movie
 	if err := client.NewSelect().Model(&m).Where("id = ?", id).Scan(ctx); err != nil {
