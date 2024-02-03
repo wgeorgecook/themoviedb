@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -33,6 +34,9 @@ func GetMovie(ctx context.Context, m Movie) (*Movie, error) {
 }
 
 func UpsertMovie(ctx context.Context, m *Movie) error {
+	if m.Name == "" {
+		return errors.New("movie name is required but not provided")
+	}
 	m.AddedAt = time.Now()
 	_, err := client.NewInsert().
 		Model(m).
