@@ -8,15 +8,16 @@ import (
 	"github.com/joho/godotenv"
 )
 
-type initConfig struct {
+type InitConfig struct {
 	Token       string
 	MovieID     string
 	ListId      string
 	MovieName   string
 	PostgresURI string
+	RunTests    bool
 }
 
-func loadEnv() initConfig {
+func LoadEnv() InitConfig {
 	// Load environment variables from the .env file
 	err := godotenv.Load()
 	if err != nil {
@@ -28,13 +29,18 @@ func loadEnv() initConfig {
 	listIDStr := os.Getenv("LIST_ID")
 	movieName := os.Getenv("MOVIE_NAME")
 	postgresUri := os.Getenv("POSTGRES_URI")
+	runTests := os.Getenv("RUN_TESTS")
 
-	return initConfig{
+	rt := false
+	rt, _ = strconv.ParseBool(runTests)
+
+	return InitConfig{
 		Token:       bearerToken,
 		MovieID:     movieIdStr,
 		ListId:      listIDStr,
 		MovieName:   movieName,
 		PostgresURI: postgresUri,
+		RunTests:    rt,
 	}
 }
 
