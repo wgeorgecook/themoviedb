@@ -11,6 +11,7 @@ func initRouter() {
 		router = gin.Default()
 	}
 
+	router.GET("/movie", getMovie)
 	router.GET("/movies", getMovies)
 
 }
