@@ -55,7 +55,7 @@ func main() {
 	}
 	signalChan := make(chan os.Signal, 1)
 	signal.Notify(signalChan, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
-	go server.StartServer()
+	go server.StartServer(cfg.Token)
 
 	<-signalChan
 	fmt.Println("\nshut down complete")
