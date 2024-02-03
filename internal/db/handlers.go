@@ -2,7 +2,10 @@ package db
 
 import (
 	"context"
+	"fmt"
 	"time"
+
+	"github.com/uptrace/bun"
 )
 
 func GetMovies(ctx context.Context) ([]Movie, error) {
@@ -13,15 +16,23 @@ func GetMovies(ctx context.Context) ([]Movie, error) {
 	return m, nil
 }
 
-func GetMovie(ctx context.Context, id int64) (*Movie, error) {
-	var m Movie
-	if err := client.NewSelect().Model(&m).Where("id = ?", id).Scan(ctx); err != nil {
+func GetMovie(ctx context.Context, m Movie) (*Movie, error) {
+	q := client.NewSelect().Model(&m)
+
+	if m.ID != 0 {
+		q.WhereOr("id ? ?", bun.Safe("="), m.ID)
+	}
+	if m.Name != "" {
+		q.WhereOr("? ILIKE ?", bun.Ident("name"), fmt.Sprintf("%%%s%%", m.Name))
+	}
+	if err := q.Scan(ctx); err != nil {
 		return nil, err
 	}
+
 	return &m, nil
 }
 
-func CreateMovie(ctx context.Context, m *Movie) error {
+func UpsertMovie(ctx context.Context, m *Movie) error {
 	m.AddedAt = time.Now()
 	_, err := client.NewInsert().
 		Model(m).
