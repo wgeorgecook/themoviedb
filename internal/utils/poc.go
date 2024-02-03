@@ -8,8 +8,7 @@ import (
 	moviedb "moviedb/internal/moviedb"
 )
 
-func TestModifyList() {
-	cfg := loadEnv()
+func TestModifyList(cfg InitConfig) {
 	movieId, listId := validateModifyListParams(cfg.Token, cfg.MovieID, cfg.ListId)
 
 	fmt.Println("initializing moviedb client")
@@ -21,12 +20,8 @@ func TestModifyList() {
 	}
 }
 
-func TestCreateMovie() {
-	cfg := loadEnv()
+func TestCreateMovie(cfg InitConfig) {
 	movieId, movieName := validateCreateMovieParams(cfg.MovieID, cfg.MovieName)
-
-	fmt.Println("initializing client")
-	db.Init(cfg.PostgresURI)
 	fmt.Println("inserting movie")
 	if err := db.CreateMovie(context.TODO(), &db.Movie{ID: int64(movieId), Name: movieName}); err != nil {
 		panic(fmt.Sprintf("could not insert movie: %v", err))
